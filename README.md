@@ -16,17 +16,14 @@ Compatible con **Fedora 44** y **macOS**.
 
 ## 🚀 Instalación rápida
 
-### Opción 1: Clonar y ejecutar
 ```bash
 git clone git@github.com:Edison-Osorio/nvim_setUp.git
 cd nvim_setUp
 bash install.sh
 ```
 
-### Opción 2: Directamente sin clonar
-```bash
-curl -fsSL https://raw.githubusercontent.com/Edison-Osorio/nvim_setUp/main/install.sh | bash
-```
+> El script copia los archivos de `config/nvim/` y `config/kitty/` a `~/.config/`.  
+> Si ya existe `~/.config/nvim/`, se guarda un backup en `~/.config/nvim.bak` antes de reemplazarla.
 
 ## 📦 Qué se instala
 
@@ -207,29 +204,54 @@ brew install --cask font-fira-code-nerd-font
 
 Luego configúrala en tu emulador de terminal (Kitty ya está configurado con FiraCode).
 
-## 📁 Estructura de configuración
+## 📁 Estructura del repositorio
 
 ```
-~/.config/
-├── nvim/                     # Neovim configuration
-│   ├── init.lua              # Bootstrap LazyVim
-│   └── lua/
-│       ├── config/           # Opciones, keymaps, autocmds
-│       └── plugins/          # Extensiones por stack
-│
-└── kitty/
-    └── kitty.conf            # Configuración de Kitty terminal
+nvim_setUp/
+├── install.sh                # Script principal de instalación
+├── config/
+│   ├── nvim/                 # Configuración de Neovim
+│   │   ├── init.lua          # Bootstrap LazyVim
+│   │   ├── lazy-lock.json    # Versiones fijadas de plugins
+│   │   ├── lazyvim.json      # Extras activos de LazyVim
+│   │   └── lua/
+│   │       ├── config/
+│   │       │   ├── options.lua    # Opciones del editor
+│   │       │   ├── keymaps.lua    # Atajos personalizados
+│   │       │   └── autocmds.lua   # Autocomandos (filetypes, etc.)
+│   │       └── plugins/
+│   │           ├── colorscheme.lua  # Catppuccin Mocha
+│   │           ├── typescript.lua   # Angular + TypeScript
+│   │           ├── python.lua       # Python + Django
+│   │           ├── ai.lua           # Asistente IA
+│   │           ├── indent.lua       # Guías de indentación
+│   │           ├── rainbow.lua      # Rainbow delimiters
+│   │           ├── zen.lua          # Modo zen
+│   │           └── which-key-config.lua
+│   └── kitty/
+│       └── kitty.conf        # Catppuccin Mocha + splits + keymaps
+├── .gitignore
+└── README.md
 ```
+
+El script copia `config/nvim/` → `~/.config/nvim/` y `config/kitty/` → `~/.config/kitty/` al instalar.
 
 ## 🔄 Actualizar configuración
 
-### Neovim plugins:
+### Plugins de Neovim:
 ```nvim
 :Lazy sync
 ```
 
-### Kitty:
-Edita `~/.config/kitty/kitty.conf` y reinicia Kitty (cierra y abre nuevamente).
+### Kitty o archivos de Neovim:
+Edita los archivos en `config/nvim/` o `config/kitty/` dentro del repo y haz commit + push.  
+En la máquina destino, actualiza con:
+```bash
+git pull
+# Luego copia los archivos manualmente si necesitas sobreescribir ~/.config/:
+cp -r config/nvim/. ~/.config/nvim/
+cp config/kitty/kitty.conf ~/.config/kitty/kitty.conf
+```
 
 ## 🐛 Solución de problemas
 
@@ -306,23 +328,24 @@ Versiones instaladas:
 ## 🎨 Personalizar
 
 ### Cambiar tema de Kitty
-Edita `~/.config/kitty/kitty.conf` y cambia los colores o instala otro tema desde:
+Edita `config/kitty/kitty.conf` en el repo y cambia los colores. Referencia de temas:
 https://github.com/catppuccin/kitty
 
 ### Cambiar fuente de Kitty
-```bash
-# ~/.config/kitty/kitty.conf
+```
+# config/kitty/kitty.conf
 font_family      Monospace Font Name
 ```
 
 ### Agregar plugins a Neovim
-Edita `~/.config/nvim/lua/plugins/` y agrega nuevos archivos Lua:
+Agrega un archivo Lua en `config/nvim/lua/plugins/` del repo:
 ```lua
 return {
   "autor/plugin-name",
   -- configuración aquí
 }
 ```
+Luego haz commit y push para que el cambio quede versionado.
 
 ## 📚 Recursos
 
