@@ -19,6 +19,8 @@
 # ══════════════════════════════════════════════════════════════════════════════
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
 log()  { echo -e "${GREEN}[+]${NC} $1"; }
 warn() { echo -e "${YELLOW}[!]${NC} $1"; }
@@ -169,200 +171,30 @@ install_python_tools() {
   log "Python tools instalados en: $(python3 -m site --user-site)"
 }
 
+# ── Configuración de Neovim ──────────────────────────────────────────────────
+install_nvim_config() {
+  step "Instalando configuración de Neovim"
+
+  NVIM_CONFIG_DIR="$HOME/.config/nvim"
+
+  if [[ -d "$NVIM_CONFIG_DIR" ]]; then
+    warn "~/.config/nvim ya existe — se hará backup en ~/.config/nvim.bak"
+    rm -rf "$HOME/.config/nvim.bak"
+    mv "$NVIM_CONFIG_DIR" "$HOME/.config/nvim.bak"
+  fi
+
+  mkdir -p "$NVIM_CONFIG_DIR"
+  cp -r "$SCRIPT_DIR/config/nvim/." "$NVIM_CONFIG_DIR/"
+  log "Configuración de Neovim instalada en $NVIM_CONFIG_DIR"
+}
+
 # ── Configuración de Kitty ──────────────────────────────────────────────────
 install_kitty_config() {
   step "Configurando Kitty"
 
   KITTY_CONFIG_DIR="$HOME/.config/kitty"
   mkdir -p "$KITTY_CONFIG_DIR"
-
-  cat > "$KITTY_CONFIG_DIR/kitty.conf" <<'EOF'
-# ══════════════════════════════════════════════════════════════════
-# Kitty — configuración para desarrollo con Neovim
-# Tema: Catppuccin Mocha  |  Fuente: FiraCode Nerd Font
-# ══════════════════════════════════════════════════════════════════
-
-# ── Fuente ───────────────────────────────────────────────────────
-font_family      FiraCode Nerd Font
-bold_font        FiraCode Nerd Font Bold
-italic_font      FiraCode Nerd Font Light
-bold_italic_font FiraCode Nerd Font Bold
-
-font_size        13.0
-
-# Ligaturas de FiraCode activadas
-disable_ligatures never
-
-# Ajuste fino de renderizado
-modify_font cell_height 110%
-
-# ── Cursor ───────────────────────────────────────────────────────
-cursor_shape          block
-# sin parpadeo — menos distracción al programar
-cursor_blink_interval 0
-cursor_beam_thickness 2.0
-
-# ── Scrollback ───────────────────────────────────────────────────
-scrollback_lines      10000
-
-# ── Mouse ────────────────────────────────────────────────────────
-# Seleccionar con mouse = copiar automáticamente al clipboard
-copy_on_select        yes
-# Click derecho = pegar desde clipboard
-paste_on_click        yes
-# Ocultar cursor del mouse después de 3 segundos
-mouse_hide_wait       3
-focus_follows_mouse   no
-
-# ── Performance ──────────────────────────────────────────────────
-repaint_delay    10
-input_delay      2
-sync_to_monitor  yes
-
-# ── Window ───────────────────────────────────────────────────────
-window_padding_width     8
-placement_strategy       center
-remember_window_size     yes
-hide_window_decorations  no
-confirm_os_window_close  0
-
-# ── Tab bar ──────────────────────────────────────────────────────
-tab_bar_edge             bottom
-tab_bar_style            powerline
-tab_powerline_style      slanted
-tab_title_template       " {index}: {title} "
-
-# ── URLs ─────────────────────────────────────────────────────────
-url_color              #89b4fa
-url_style              curly
-open_url_with          default
-detect_urls            yes
-
-# ── Shell integration (mejora la experiencia con zsh) ────────────
-shell_integration      enabled
-
-# ── Soporte para Neovim ──────────────────────────────────────────
-# Permite que nvim use undercurl (ondas bajo errores de LSP)
-undercurl_style        thin-sparse
-
-# Protocolo de imágenes — habilita plugins como image.nvim
-allow_remote_control   yes
-listen_on              unix:/tmp/mykitty
-
-# ── Catppuccin Mocha ─────────────────────────────────────────────
-# https://github.com/catppuccin/kitty
-foreground              #CDD6F4
-background              #1E1E2E
-selection_foreground    #1E1E2E
-selection_background    #F5E0DC
-
-cursor                  #F5E0DC
-cursor_text_color       #1E1E2E
-
-url_color               #F5E0DC
-
-active_border_color     #B4BEFE
-inactive_border_color   #6C7086
-bell_border_color       #F38BA8
-visual_bell_color       none
-
-wayland_titlebar_color  system
-macos_titlebar_color    system
-
-active_tab_foreground   #11111B
-active_tab_background   #CBA6F7
-inactive_tab_foreground #CDD6F4
-inactive_tab_background #181825
-tab_bar_background      #11111B
-tab_bar_margin_color    none
-
-mark1_foreground #1E1E2E
-mark1_background #B4BEFE
-mark2_foreground #1E1E2E
-mark2_background #CBA6F7
-mark3_foreground #1E1E2E
-mark3_background #74C7EC
-
-# Black
-color0  #45475A
-color8  #585B70
-# Red
-color1  #F38BA8
-color9  #F38BA8
-# Green
-color2  #A6E3A1
-color10 #A6E3A1
-# Yellow
-color3  #F9E2AF
-color11 #F9E2AF
-# Blue
-color4  #89B4FA
-color12 #89B4FA
-# Magenta
-color5  #F5C2E7
-color13 #F5C2E7
-# Cyan
-color6  #94E2D5
-color14 #94E2D5
-# White
-color7  #BAC2DE
-color15 #A6ADC8
-
-# ── Layout por defecto ───────────────────────────────────────────
-# "splits" permite crear paneles libres con hsplit/vsplit
-enabled_layouts splits,stack,tall
-
-# ── Keymaps ──────────────────────────────────────────────────────
-
-# Tabs
-map ctrl+shift+t    new_tab_with_cwd
-map ctrl+shift+l    next_tab
-map ctrl+shift+h    prev_tab
-map ctrl+shift+w    close_tab
-
-# ── Crear splits ─────────────────────────────────────────────────
-# ctrl+shift+\ → split vertical   (paneles lado a lado  |  )
-# ctrl+shift+- → split horizontal (paneles arriba/abajo ── )
-map ctrl+shift+backslash  launch --location=vsplit --cwd=current
-map ctrl+shift+minus      launch --location=hsplit --cwd=current
-
-# Cerrar el split/panel activo
-map ctrl+shift+q  close_window
-
-# Maximizar/restaurar el panel activo (tipo zoom)
-map ctrl+shift+z  toggle_layout stack
-
-# ── Navegar entre splits (alt+hjkl) ──────────────────────────────
-map alt+h  neighboring_window left
-map alt+l  neighboring_window right
-map alt+k  neighboring_window up
-map alt+j  neighboring_window down
-
-# ── Redimensionar splits (alt+shift+hjkl) ────────────────────────
-map alt+shift+h  resize_window narrower 3
-map alt+shift+l  resize_window wider    3
-map alt+shift+k  resize_window taller   3
-map alt+shift+j  resize_window shorter  3
-
-# Igualar tamaño de todos los paneles
-map ctrl+shift+equal  resize_window reset
-
-# Mover panel a otra posición
-map ctrl+shift+up     move_window up
-map ctrl+shift+down   move_window down
-map ctrl+shift+left   move_window left
-map ctrl+shift+right  move_window right
-
-# ── Zoom de fuente ────────────────────────────────────────────────
-map ctrl+equal  change_font_size all +1.0
-map ctrl+minus  change_font_size all -1.0
-map ctrl+0      change_font_size all 0
-
-# ── Copiar / pegar ────────────────────────────────────────────────
-map ctrl+shift+c  copy_to_clipboard
-map ctrl+shift+v  paste_from_clipboard
-EOF
-
+  cp "$SCRIPT_DIR/config/kitty/kitty.conf" "$KITTY_CONFIG_DIR/kitty.conf"
   log "Configuración de Kitty instalada en $KITTY_CONFIG_DIR/kitty.conf"
 }
 
@@ -393,6 +225,7 @@ case $OS in
   macos)  install_macos  ;;
 esac
 
+install_nvim_config
 install_kitty_config
 install_npm_tools
 install_python_tools
