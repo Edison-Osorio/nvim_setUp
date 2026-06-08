@@ -1,0 +1,113 @@
+# Operating System
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Environment and dependencies
+.env
+.env.local
+.env.*.local
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+.pytest_cache/
+.coverage
+*.egg-info/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+.vim/
+.netrwhist
+
+# NVM and Node
+.nvm/
+.nvmrc
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Kitty cache (optional - keep if you want fresh cache on other machines)
+# .cache/kitty/
+
+# Neovim cache (optional - plugins will be reinstalled from scratch)
+# .local/share/nvim/
+
+# Sensitive information
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.json
+
+# Lock files for local changes (keep package-lock.json and requirements.txt for reproducibility)
+# If you want to track specific lock files, remove them from here
+.package-lock.json
+
+# IDE temporary files
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Miscellaneous
+.vagrant/
+.cache/
+.parcel-cache/
+.next/
+out/
+.nuxt/
+dist/
+.cache/
+.vuepress/dist/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+
+# Docker
+docker-compose.override.yml
